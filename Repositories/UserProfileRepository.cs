@@ -28,6 +28,13 @@ namespace Gifter.Repositories
             return _context.UserProfile
                 .FirstOrDefault(up => up.Id == id);
         }
+        //public List<UserProfile> GetByPostId(int id)
+        //{
+        //    return _context.UserProfile.Include(up => up.Post)
+        //                    .Where(up => up.PostId == id)
+        //                    .OrderBy(up => up.Title)
+        //                    .ToList();
+        //}
         public void Add(UserProfile UserProfile)
         {
             _context.Add(UserProfile);
