@@ -23,36 +23,43 @@ namespace Gifter.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_userProfileRepository.GetAll());
+            var allUserProfiles = _userProfileRepository.GetAll();
+            return Ok(allUserProfiles);
         }
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             var userProfile = _userProfileRepository.GetById(id);
+
             if (userProfile == null)
             {
                 return NotFound();
             }
             return Ok(userProfile);
         }
-        [HttpGet("getbyuser/{id}")]
-        //public IActionResult GetByPost(int id)
-        //{
-        //    return Ok(_userProfileRepository.GetByPostId(id));
-        //}
+       
         [HttpPost]
         public IActionResult Add(UserProfile userProfile)
         {
+            userProfile.DateCreated = DateTime.UtcNow;
+
             _userProfileRepository.Add(userProfile);
-            return CreatedAtAction("Get", new { id = userProfile.Id }, userProfile);
+            return Ok(userProfile);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, UserProfile userProfile)
+        public IActionResult Update(int id, UserProfile userProfile)
         {
             if (id != userProfile.Id)
             {
                 return BadRequest();
+            }
+
+            var existingUser = _userProfileRepository.GetById(id);
+
+            if (existingUser == null)
+            {
+                return NotFound();
             }
 
             _userProfileRepository.Update(userProfile);
@@ -62,6 +69,12 @@ namespace Gifter.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            var userProfile = _userProfileRepository.GetById(id);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
             _userProfileRepository.Delete(id);
             return NoContent();
         }
