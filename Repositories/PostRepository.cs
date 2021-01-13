@@ -21,6 +21,8 @@ namespace Gifter.Repositories
         {
             return _context.Post
                 .Include(p => p.UserProfile)
+                .Take(5)
+                .OrderByDescending(p => p.DateCreated)
                 .ToList();
         }
 
@@ -28,6 +30,7 @@ namespace Gifter.Repositories
         {
             return _context.Post
                 .Include(p => p.UserProfile)
+                .Include(p => p.Comments)
                 .FirstOrDefault(p => p.Id == id);
         }
         public List<Post> GetByUserProfileId(int id)
@@ -54,6 +57,21 @@ namespace Gifter.Repositories
             var post = GetById(id);
             _context.Post.Remove(post);
             _context.SaveChanges();
+        }
+
+        public List<Post> Search(string searchTerm, bool oldestFirst)
+        {
+            var query = _context.Post
+                .Where(p => p.Title.Contains(searchTerm));
+
+            if (oldestFirst == true)
+            {
+                return query.OrderBy(p => p.DateCreated).ToList();
+            }
+            else
+            {
+                return query.OrderByDescending(p => p.DateCreated).ToList();
+            }
         }
     }
 }
