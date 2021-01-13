@@ -31,6 +31,7 @@ namespace Gifter
         {
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IUserProfileRepository, UserProfileRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
             services.AddDbContext<ApplicationDbContext>(options =>
              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 

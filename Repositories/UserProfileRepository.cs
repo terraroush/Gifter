@@ -28,16 +28,10 @@ namespace Gifter.Repositories
             return _context.UserProfile
                 .FirstOrDefault(up => up.Id == id);
         }
-        //public List<UserProfile> GetByPostId(int id)
-        //{
-        //    return _context.UserProfile.Include(up => up.Post)
-        //                    .Where(up => up.PostId == id)
-        //                    .OrderBy(up => up.Title)
-        //                    .ToList();
-        //}
-        public void Add(UserProfile UserProfile)
+       
+        public void Add(UserProfile userProfile)
         {
-            _context.Add(UserProfile);
+            _context.Add(userProfile);
             _context.SaveChanges();
         }
 
@@ -49,8 +43,13 @@ namespace Gifter.Repositories
 
         public void Delete(int id)
         {
-            var userProfile = GetById(id);
-            _context.UserProfile.Remove(userProfile);
+            var userToDelete = _context.UserProfile
+                .Where(up => up.Id == id) //find user by id
+                .Include(up => up.Comments) //comments they've made
+                .Include(up => up.Posts) //posts they've written
+                .ThenInclude(p => p.Comments); //all comments on posts they've written
+
+            _context.UserProfile.RemoveRange(userToDelete);
             _context.SaveChanges();
         }
     }
