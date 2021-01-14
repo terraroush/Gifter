@@ -22,7 +22,27 @@ namespace Gifter.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_postRepository.GetAll());
+            var posts = _postRepository.GetAll();
+            return Ok(posts);
+        }
+
+        [HttpGet("search")]
+        public IActionResult Search(string criterion, bool oldestFirst)
+        {
+            if (criterion == null)
+            {
+                return Ok(_postRepository.GetAll());
+            }
+
+            var posts = _postRepository.Search(criterion, oldestFirst);
+            return Ok(posts);
+        }
+        [HttpGet("hottest")]
+        public IActionResult DateSearch(string since)
+        {
+            var dt = DateTime.Parse(since);
+            return Ok(_postRepository.DateSearch(dt));
+
         }
 
         [HttpGet("{id}")]
@@ -41,10 +61,12 @@ namespace Gifter.Controllers
             return Ok(_postRepository.GetByUserProfileId(id));
         }
         [HttpPost]
-        public IActionResult Post(Post post)
+        public IActionResult Add(Post post)
         {
+            post.DateCreated = DateTime.UtcNow;
+
             _postRepository.Add(post);
-            return CreatedAtAction("Get", new { id = post.Id }, post);
+            return Ok(post);
         }
 
         [HttpPut("{id}")]
@@ -55,6 +77,13 @@ namespace Gifter.Controllers
                 return BadRequest();
             }
 
+            var exisitingPost = _postRepository.GetById(id);
+
+            if (exisitingPost == null)
+            {
+                return NotFound();
+            }
+
             _postRepository.Update(post);
             return NoContent();
         }
@@ -62,6 +91,13 @@ namespace Gifter.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            var post = _postRepository.GetById(id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
             _postRepository.Delete(id);
             return NoContent();
         }

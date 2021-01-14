@@ -62,16 +62,21 @@ namespace Gifter.Repositories
         public List<Post> Search(string searchTerm, bool oldestFirst)
         {
             var query = _context.Post
-                .Where(p => p.Title.Contains(searchTerm));
+                .Include(p => p.UserProfile)
+                .Where(p => p.Title.Contains(searchTerm))
+                .Where(p => p.Caption.Contains(searchTerm));
 
-            if (oldestFirst == true)
-            {
-                return query.OrderBy(p => p.DateCreated).ToList();
-            }
-            else
-            {
-                return query.OrderByDescending(p => p.DateCreated).ToList();
-            }
+            return oldestFirst
+             ? query.OrderBy(p => p.DateCreated).ToList()
+             : query.OrderByDescending(p => p.DateCreated).ToList();
+           
+        }
+        public List<Post> DateSearch(DateTime date)
+        {
+            return _context.Post
+                .Where(p => p.DateCreated >= date)
+                .OrderByDescending(p => p.DateCreated)
+                .ToList();
         }
     }
 }

@@ -10,6 +10,8 @@ namespace Gifter.Repositories
         List<Comment> GetAll();
         Comment GetById(int id);
         List<Comment> GetByUserProfileId(int id);
+        List<Comment> GetByPostId(int id);
+
         void Update(Comment comment);
     }
 }

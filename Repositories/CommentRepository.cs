@@ -38,6 +38,12 @@ namespace Gifter.Repositories
                             .Where(c => c.UserProfileId == id)
                             .ToList();
         }
+        public List<Comment> GetByPostId(int id)
+        {
+            return _context.Comment
+                            .Where(c => c.PostId == id)
+                            .ToList();
+        }
         public void Add(Comment comment)
         {
             _context.Add(comment);

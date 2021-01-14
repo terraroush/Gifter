@@ -1,4 +1,5 @@
 ﻿using Gifter.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Gifter.Repositories
@@ -11,5 +12,7 @@ namespace Gifter.Repositories
         void Update(Post post);
         void Delete(int id);
         void Add(Post post);
+        List<Post> Search(string searchTerm, bool oldestFirst);
+        List<Post> DateSearch(DateTime date);
     }
 }

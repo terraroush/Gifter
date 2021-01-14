@@ -22,18 +22,19 @@ namespace Gifter.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_commentRepository.GetAll());
+            var comments = _commentRepository.GetAll();
+            return Ok(comments);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var post = _commentRepository.GetById(id);
-            if (post == null)
+            var comment = _commentRepository.GetById(id);
+            if (comment == null)
             {
                 return NotFound();
             }
-            return Ok(post);
+            return Ok(comment);
         }
         [HttpGet("getbyuser/{id}")]
         public IActionResult GetByUser(int id)
@@ -55,6 +56,13 @@ namespace Gifter.Controllers
                 return BadRequest();
             }
 
+            var exisitingComment = _commentRepository.GetById(id);
+
+            if (exisitingComment == null)
+            {
+                return NotFound();
+            }
+
             _commentRepository.Update(comment);
             return NoContent();
         }
@@ -62,6 +70,12 @@ namespace Gifter.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            var comment = _commentRepository.GetById(id);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
             _commentRepository.Delete(id);
             return NoContent();
         }
