@@ -21,7 +21,6 @@ namespace Gifter.Repositories
         {
             return _context.Post
                 .Include(p => p.UserProfile)
-                .Take(5)
                 .OrderByDescending(p => p.DateCreated)
                 .ToList();
         }
