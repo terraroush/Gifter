@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, createContext } from "react";
 
-export const PostContext = React.createContext();
+export const PostContext = createContext();
 
 export const PostProvider = (props) => {
     const [posts, setPosts] = useState([]);
@@ -33,20 +33,6 @@ export const PostProvider = (props) => {
             body: JSON.stringify(post),
         });
     };
-
-    const leaveComment = (postId, message) => {
-        const comment = { postId, message };
-        const token = localStorage.getItem("token");
-    
-        return fetch("/api/comment", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(comment),
-        }).then(getAllPosts);
-      };
     
       return (
         <PostContext.Provider
@@ -56,7 +42,6 @@ export const PostProvider = (props) => {
             addPost,
             getPost,
             searchPosts,
-            leaveComment,
           }}
         >
           {props.children}

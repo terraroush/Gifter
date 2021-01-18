@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import AppViews from "./components/AppViews";
-import PostList from './components/PostList';
 
 
 function App() {

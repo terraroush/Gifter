@@ -1,122 +1,197 @@
-import React, { useContext, useState } from "react"
-import { useHistory } from 'react-router-dom';
-import { PostContext } from './PostProvider';
+// import React, { useState, useContext } from "react";
+// import { Button, Form, FormGroup, Label, Input, Col } from "reactstrap";
+// import { PostContext } from "./PostProvider";
+// import { useHistory } from "react-router-dom";
 
-export const PostForm = () => {
-    const [post, setPost] = useState({})
-    //wait for data before button is active
-    const [isLoading, setIsLoading] = useState(true);
-    const {postId} = useParams();
-	const history = useHistory();
-    
-    //when field changes, update state. This causes a re-render and updates the view.
-    //Controlled component
-    const handleControlledInputChange = (event) => {
-        //When changing a state object or array, 
-        //always create a copy make changes, and then set state.
-        const newPost = { ...post }
-        //animal is an object with properties. 
-        //set the property to the new value
-        newPost[event.target.name] = event.target.value
-        //update state
-        setPost(newPost)
-    }
-    
-    // Get customers and locations. If animalId is in the URL, getAnimalById
-    useEffect(() => {
-        if(postId){
-            fetch("/api/post")
-            .then(data => {
-                setPost(data)
-                setIsLoading(false)
-            })
-        } else {
-        setIsLoading(false)
-        }
+// const PostForm = () => {
+//   const { addPost } = useContext(PostContext);
+//   const [post, setPost] = useState({});
 
-    }, [])
+//   const history = useHistory();
+// //   const user = JSON.parse(localStorage.getItem("userProfile"));
+//   const handleControlledInputChange = (event) => {
+//     const newPost = { ...post };
+//     newPost[event.target.name] = event.target.value;
+//     setPost(newPost);
+//   };
+
+//   const handleClickNewPost = (event) => {
+//     event.preventDefault();
+//     if (
+//       post.title === "" ||
+//       post.imageUrl === "" ||
+//       post.dateCreated === null
+//     ) {
+//       window.alert("Please fill in required fields");
+//     } else {
+//       addPost({
+//         title: post.title,
+//         imageUrl: post.imageUrl,
+//         dateCreated: post.dateCreated,
+//         userProfileId: post.userProfileId === 1,
+//       }).then(() => history.push("/"));
+//     }
+//   };
+
+//   return (
+//     <>
+//       <h3 className="mt-5">Add a Post</h3>
+//       <div className="container w-50 card mb-5">
+//         <Form className="p-3">
+//           <FormGroup row>
+//             <Label for="title" sm={2}>
+//               Title
+//             </Label>
+//             <Col sm={10}>
+//               <Input
+//                 onChange={handleControlledInputChange}
+//                 name="title"
+//                 type="text"
+//                 id="postTitle"
+//                 required
+//                 autoFocus
+//                 className="form-control"
+//               />
+//             </Col>
+//           </FormGroup>
+//           <FormGroup row>
+//             <Label for="imageUrl" className="text-left" sm={4}>
+//               Url Image
+//             </Label>
+//             <Col sm={8}>
+//               <Input
+//                 onChange={handleControlledInputChange}
+//                 name="imageUrl"
+//                 type="text"
+//                 name="imageUrl"
+//                 id="imageUrl"
+//                 placeholder="Url"
+//               />
+//             </Col>
+//           </FormGroup>
+//           <FormGroup row>
+//             <Label className="text-left" for="caption" sm={4}>
+//               Date Created
+//             </Label>
+//             <Col sm={8}>
+//               <Input
+//                 onChange={handleControlledInputChange}
+//                 type="date"
+//                 name="dateCreated"
+//                 id="dateCreated"
+//               />
+//             </Col>
+//           </FormGroup>
+//           <Button onClick={handleClickNewPost}>Submit</Button>
+//         </Form>
+//       </div>
+//     </>
+//   );
+// };
+// export default PostForm;
+
+// import React, { useContext, useState } from "react"
+// import { useHistory } from 'react-router-dom';
+// import { PostContext } from './PostProvider';
+// import { FormGroup, Form, Button, Label, Input } from "reactstrap";
+
+
+// const PostForm = () => {
+//     const { addPost } = useContext(PostContext);
+//     const [userProfileId, setUserProfileId] = useState("")
+//     const [imageUrl, setImageUrl] = useState("")
+//     const [title, setTitle] = useState("")
+//     const [caption, setCaption] = useState("")
+
+//     const history = useHistory();
     
-    const constructPostObject = () => {
-            //disable the button - no extra clicks
-            setIsLoading(true);
-            if (postId){
-                //PUT - update
-                updatePost({
-                    Id: post.id,
-                    Title: post.name,
-                    ImageUrl: post.breed,
-                    Caption: post.locationId,
-                    DateCreated: parseInt(post.customerId),
-                    UserProfileId: parseInt(post.customerId)
-                })
-                .then(() => history.push(`/animals/detail/${animal.id}`))
-            }else {
-                //POST - add
-                addAnimal({
-                    name: animal.name,
-                    breed: animal.breed,
-                    locationId: parseInt(animal.locationId),
-                    customerId: parseInt(animal.customerId)
-                })
-                .then(() => history.push("/animals"))
-            }
-        }
-    }
-    
-    return (
-        <form className="animalForm">
-            <h2 className="animalForm__title">{animalId ? "Edit Animal" : "Add Animal"}</h2>
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="animalName">Animal name: </label>
-                    <input type="text" id="animalName" name="name" required autoFocus className="form-control" 
-                    placeholder="Animal name" 
-                    onChange={handleControlledInputChange} 
-                    defaultValue={animal.name}/>
-                </div>
-            </fieldset>
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="animalBreed">Animal breed: </label>
-                    <input type="text" id="animalBreed" name="breed" className="form-control" 
-                    placeholder="Breed" 
-                    onChange={handleControlledInputChange} 
-                    defaultValue={animal.breed}/>
-                </div>
-            </fieldset>
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="location">Assign to location: </label>
-                    <select value={animal.locationId} name="locationId" id="animalLocation" className="form-control" onChange={handleControlledInputChange}>
-                        <option value="0">Select a location</option>
-                        {locations.map(l => (
-                            <option key={l.id} value={l.id}>
-                                {l.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            </fieldset>
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="customer">Customer: </label>
-                    <select value={animal.customerId} name="customerId" id="customerAnimal" className="form-control" onChange={handleControlledInputChange}>
-                        <option value="0">Select a customer</option>
-                        {customers.map(c => (
-                            <option key={c.id} value={c.id}>
-                                {c.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            </fieldset>
-            <button className="btn btn-primary"
-                disabled={isLoading}
-                onClick={event => {
-                    event.preventDefault() // Prevent browser from submitting the form
-                    constructAnimalObject()
-                }}>
-            {animalId ? "Save Animal" : "Add Animal"}</button>
-        </form>
-    )
-}
+//     const submit = e => {
+//         const post = {
+//             imageUrl,
+//             title,
+//             caption,
+//             userProfileId,
+//         };
+
+//         addPost(post).then(p => {
+//             history.push("/");
+//         });
+//     };
+
+//     return (
+//         <Form>
+//             <FormGroup>
+//                 <Label for="imageUrl">Image URL</Label>
+//                 <Input 
+//                     type="url" 
+//                     name="imageUrl" 
+//                     id="imageUrl"
+//                     placeholder="imageUrl">
+//                 </Input>
+//             </FormGroup>
+//             <FormGroup>
+//                 <Label for="title">Title</Label>
+//                 <Input 
+//                     type="text" 
+//                     name="title" 
+//                     id="title"
+//                     placeholder="title">
+//                 </Input>
+//             </FormGroup>
+//             <FormGroup>
+//                 <Label for="caption">Caption</Label>
+//                 <Input 
+//                     type="textearea" 
+//                     name="caption" 
+//                     id="caption"
+//                     placeholder="caption">
+//                 </Input>
+//             </FormGroup>
+//             <Button
+//                 color="purple"
+//                 onClick={submit}
+//                 style={{ marginTop: "15px" }}
+//             >
+//                 SUBMIT
+//             </Button>
+           
+//         </Form>
+
+
+
+
+
+        // <Grid centered columns={3}>
+        //     <Grid.Row>
+        //         <Grid.Column>
+        //             <FormGroup>
+        //                 <Form.Input
+        //                 fluid
+        //                 placeholder="Image URL"
+        //                 onChange={e => setImageUrl(e.target.value)}
+        //                 />
+        //             </FormGroup>
+        //                 <Form.Input
+        //                 fluid
+        //                 placeholder="Title"
+        //                 onChange={e => setTitle(e.target.value)}
+        //                 />
+        //                 <TextArea
+        //                 placeholder="Caption"
+        //                 onChange={e => setCaption(e.target.value)}
+        //                 />
+        //                 <Button
+        //                 color="purple"
+        //                 onClick={submit}
+        //                 style={{ marginTop: "15px" }}
+        //                 >
+        //                     SUBMIT
+        //                 </Button>
+        //             </Form>
+        //         </Grid.Column>
+        //     </Grid.Row>
+        // </Grid>
+//     )
+// };
+
+// export default PostForm;
